@@ -28,8 +28,7 @@ namespace Data.Tests
 		public void GetRunStats_OneTestRunInDatabase_ReturnsStatsEntry()
 		{
 			var tr = new TestRun();
-			m_Context.TestRuns.Add(tr);
-			m_Context.SaveChanges();
+			SaveTestRunToTheDatabase(tr);
 
 			var results = m_StatsService.GetRunStats();
 
@@ -41,8 +40,7 @@ namespace Data.Tests
 		{
 			var tr = new TestRun();
 			tr.Success = true;
-			m_Context.TestRuns.Add(tr);
-			m_Context.SaveChanges();
+			SaveTestRunToTheDatabase(tr);
 
 			var statEntry = m_StatsService.GetRunStats().First();
 
@@ -54,12 +52,17 @@ namespace Data.Tests
 		{
 			var tr = new TestRun();
 			tr.Success = false;
-			m_Context.TestRuns.Add(tr);
-			m_Context.SaveChanges();
+			SaveTestRunToTheDatabase(tr);
 
 			var statEntry = m_StatsService.GetRunStats().First();
 
 			Assert.That(statEntry.Rate, Is.EqualTo(0));
+		}
+
+		private void SaveTestRunToTheDatabase(TestRun tr)
+		{
+			m_Context.TestRuns.Add(tr);
+			m_Context.SaveChanges();
 		}
 
 		private void CleanupDatabase()
