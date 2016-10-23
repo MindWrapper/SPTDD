@@ -6,39 +6,39 @@ namespace Data.Tests
 	[TestFixture]
 	public class TestRunStatsTests
 	{
+		private TestDataDbContext m_Context;
+		private TestRunStats m_StatsService;
+
 		[SetUp]
 		public void Setup()
 		{
+			m_Context = new TestDataDbContext("TestConnection");
+			m_StatsService = new TestRunStats(m_Context);
 			CleanupDatabase();
 		}
 
 		[Test]
 		public void GetRunStats_NoRunsInDatabase_ReturnsNothing()
 		{
-			var context = new TestDataDbContext("TestConnection");
-			var statsService = new TestRunStats(context);
-			var results = statsService.GetRunStats();
+			var results = m_StatsService.GetRunStats();
 			Assert.IsEmpty(results);
 		}
 
 		[Test]
 		public void GetRunStats_OneTestRunInDatabase_ReturnsStatsEntry()
 		{
-			var context = new TestDataDbContext("TestConnection");
-			var statsService = new TestRunStats(context);
 			var tr = new TestRun();
-			context.TestRuns.Add(tr);
-			context.SaveChanges();
+			m_Context.TestRuns.Add(tr);
+			m_Context.SaveChanges();
 
-			var results = statsService.GetRunStats();
+			var results = m_StatsService.GetRunStats();
 
 			Assert.That(results.Count(), Is.EqualTo(1));
 		}
 
-		private static void CleanupDatabase()
+		private void CleanupDatabase()
 		{
-			var context = new TestDataDbContext("TestConnection");
-			context.Database.ExecuteSqlCommand("delete from TestRuns");
+			m_Context.Database.ExecuteSqlCommand("delete from TestRuns");
 		}
 	}
 }
