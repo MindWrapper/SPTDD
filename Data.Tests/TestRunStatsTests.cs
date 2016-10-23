@@ -36,6 +36,19 @@ namespace Data.Tests
 			Assert.That(results.Count(), Is.EqualTo(1));
 		}
 
+		[Test]
+		public void GetRunStats_OneSuccesfullTestRunInTheDatabase_ReturnsStatsEntryWith100ProcentRate()
+		{
+			var tr = new TestRun();
+			tr.Success = true;
+			m_Context.TestRuns.Add(tr);
+			m_Context.SaveChanges();
+
+			var statEntry = m_StatsService.GetRunStats().First();
+
+			Assert.That(statEntry.Rate, Is.EqualTo(100));
+		}
+
 		private void CleanupDatabase()
 		{
 			m_Context.Database.ExecuteSqlCommand("delete from TestRuns");

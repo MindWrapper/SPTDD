@@ -5,6 +5,7 @@ namespace Data
 {
 	public class TestRunStat
 	{
+		public int Rate;
 	}
 	public class TestRunStats
 	{
@@ -29,6 +30,7 @@ namespace Data
 				while (reader.Read())
 				{
 					var statsEntry = new TestRunStat();
+					statsEntry.Rate = reader.GetInt32(0);
 					results.Add(statsEntry);
 				}
 			}
