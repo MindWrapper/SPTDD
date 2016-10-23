@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[GetRunStats] 
 AS 
 BEGIN
-select 'something'
+select 1 from TestRuns
 END
