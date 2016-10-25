@@ -27,7 +27,7 @@ namespace Data.Tests
 		[Test]
 		public void GetRunStats_OneTestRunInDatabase_ReturnsStatsEntry()
 		{
-			var tr = new TestRun();
+			var tr = new TestRun() { Test = "TestName" };
 			SaveTestRunToTheDatabase(tr);
 
 			var results = m_StatsService.GetRunStats();
@@ -38,8 +38,7 @@ namespace Data.Tests
 		[Test]
 		public void GetRunStats_OneSuccesfullTestRunInTheDatabase_ReturnsStatsEntryWith100ProcentRate()
 		{
-			var tr = new TestRun();
-			tr.Success = true;
+			var tr = new TestRun { Test = "TestName", Success = true };
 			SaveTestRunToTheDatabase(tr);
 
 			var statEntry = m_StatsService.GetRunStats().First();
@@ -50,13 +49,25 @@ namespace Data.Tests
 		[Test]
 		public void GetRunStats_OneFailedTestRunInTheDatabase_ReturnsStatsEntryWith0ProcentRate()
 		{
-			var tr = new TestRun();
-			tr.Success = false;
+			var tr = new TestRun { Test = "TestName", Success = false };
 			SaveTestRunToTheDatabase(tr);
 
 			var statEntry = m_StatsService.GetRunStats().First();
 
 			Assert.That(statEntry.Rate, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void GetRunStats_SameTestFailedAndSucceeded_ReturnsStatsEntryWith0ProcentRate()
+		{
+			var trFailed = new TestRun { Test = "TestName", Success = false };
+			var trSucceded = new TestRun {Test  = "TestName", Success = true };
+			SaveTestRunToTheDatabase(trFailed);
+			SaveTestRunToTheDatabase(trSucceded);
+
+			var statEntry = m_StatsService.GetRunStats().First();
+
+			Assert.That(statEntry.Rate, Is.EqualTo(50));
 		}
 
 		private void SaveTestRunToTheDatabase(TestRun tr)
