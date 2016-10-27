@@ -70,6 +70,19 @@ namespace Data.Tests
 			Assert.That(statEntry.Rate, Is.EqualTo(50));
 		}
 
+		[Test]
+		[Ignore("Exercise: Enable it an make it green. Don't foget to uncomment the assertion.")]
+		public void GetRunStats_OneTestRunInDatabase_ReturnsStatsEntryWithProperName()
+		{
+			var tr = new TestRun() { Test = "TestName" };
+			SaveTestRunToTheDatabase(tr);
+
+			var statEntry = m_StatsService.GetRunStats().First();
+
+			// DON'T forget to uncomment, when enabling the test
+			// Assert.That(statEntry.Name, Is.EqualTo("TestName"));
+		}
+
 		private void SaveTestRunToTheDatabase(TestRun tr)
 		{
 			m_Context.TestRuns.Add(tr);
